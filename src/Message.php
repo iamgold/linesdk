@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GClient;
  * This class is used to handle all APIs include create valide webhook, push and reply message
  *
  * @author Eric Huang <iamgold0105@gmail.com>
- * @version 1.0.0
+ * @version 1.0.3
  */
 class Message {
 
@@ -255,7 +255,7 @@ class Message {
      */
     private function hasAccessToken()
     {
-        return ($this->accessToken!==false);
+        return (!empty($this->accessToken));
     }
 
     /**
