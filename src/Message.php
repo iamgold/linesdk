@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GClient;
  * This class is used to handle all APIs include create valide webhook, push and reply message
  *
  * @author Eric Huang <iamgold0105@gmail.com>
- * @version 1.0.3
+ * @version 1.0.5
  */
 class Message {
 
@@ -225,7 +225,7 @@ class Message {
         $postData = [];
         if ($type=='json') {
             $postData = [
-                    'json' => json_encode($data)
+                    'json' => $data
                 ];
         }
 
@@ -240,6 +240,8 @@ class Message {
                     'form_params' => $data
                 ];
         }
+
+        $postData['headers'] = $headers;
 
         $client = new GClient([
                 'base_uri' => static::ENDPOINT
