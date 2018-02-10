@@ -103,9 +103,10 @@ class Message {
         $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
         $path = 'bot/message/reply';
         $data = [
+            'replyToken' => $replyToken,
             'message' => $message
         ];
-        $response = $this->sendReqeust($method, $headers, $path, $message, 'json');
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return true;
 
