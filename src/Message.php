@@ -68,8 +68,8 @@ class Message {
     public function parseEvents($requestBody)
     {
         $events = [];
-        $rows = json_decode($this->requestBody, true);
-        while($r=array_shift($rows)) {
+        $json = json_decode($requestBody, true);
+        while($r=array_shift($json['events'])) {
             $events[] = MessageEventFactory::create($r);
         }
 

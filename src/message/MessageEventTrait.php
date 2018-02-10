@@ -10,6 +10,17 @@ namespace iamgold\linesdk\message;
  */
 trait MessageEventTrait
 {
+
+    /**
+     * get reply token
+     *
+     * @return string
+     */
+    public function getReplyToken()
+    {
+        return $this->data['replyToken'];
+    }
+
     /**
      * get message
      *
@@ -50,7 +61,7 @@ trait MessageEventTrait
     public function hasContentFile()
     {
         $messageType = $this->getMessageType();
-        return (preg_match('/(audio|video|image|file)/', $messageType)!=false)
+        return (preg_match('/(audio|video|image|file)/', $messageType)!=false);
     }
 
     /**
@@ -79,6 +90,6 @@ trait MessageEventTrait
             $contents = file_get_contents($this->getContentFileUrl());
         }
 
-        return $content;
+        return $contents;
     }
 }

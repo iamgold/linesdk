@@ -13,16 +13,16 @@ class Event
     /**
      * @var array $data
      */
-    private $data;
+    protected $data;
 
     /**
      * construct
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = &$data;
     }
 
     /**
@@ -33,16 +33,6 @@ class Event
     public function getType()
     {
         return $this->data['type'];
-    }
-
-    /**
-     * get reply token
-     *
-     * @return string
-     */
-    public function getReplyToken()
-    {
-        return $this->data['replyToken'];
     }
 
     /**
@@ -99,8 +89,13 @@ class Event
      */
     public function getSourceGroupId()
     {
-        $source = $this->getSource();
-        return $source['groupId'];
+        $groupId = null;
+        if ($this->isGroupEvent()) {
+            $source = $this->getSource();
+            $groupId = $source['groupId'];
+        }
+
+        return $groupId;
     }
 
     /**
@@ -110,8 +105,13 @@ class Event
      */
     public function getSourceRoomId()
     {
-        $source = $this->getSource();
-        return $source['roomId'];
+        $roomId = null;
+        if ($this->isGroupEvent()) {
+            $source = $this->getSource();
+            $roomId = $source['roomId'];
+        }
+
+        return $roomId;
     }
 
     /**
