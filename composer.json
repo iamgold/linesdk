@@ -1,0 +1,18 @@
+{
+    "name": "iamgold/linesdk",
+    "description": "This is a lightweight and simple library for accessing social API of Line. It only provides a simple method to access any APIs, different than offical SDK. Note: This SDK is not an offical SDK.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Eric Huang",
+            "email": "iamgold0105@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {"iamgold\\linesdk\\": "src/"}
+    }
+}
