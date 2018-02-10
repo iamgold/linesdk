@@ -94,17 +94,17 @@ class Message {
      * Reply message
      *
      * @param string $replyToken
-     * @param array $message
+     * @param array $messages
      * @return true|array return error message when request fail.
      */
-    public function reply($replyToken, $message)
+    public function reply($replyToken, $messages)
     {
         $method = 'POST';
         $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
         $path = 'bot/message/reply';
         $data = [
             'replyToken' => $replyToken,
-            'message' => $message
+            'messages' => $messages
         ];
         $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
@@ -121,14 +121,14 @@ class Message {
      * @param array $message
      * @return true|array return error message when request fail.
      */
-    public function push($to, $message)
+    public function push($to, $messages)
     {
         $method = 'POST';
         $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
         $path = 'bot/message/push';
         $data = [
             'to' => $to,
-            'message' => $message
+            'messages' => $messages
         ];
 
         $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
@@ -146,14 +146,14 @@ class Message {
      * @param array $message
      * @return true|array return error message when request fail.
      */
-    public function multicast($to, $message)
+    public function multicast($to, $messages)
     {
         $method = 'POST';
         $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
         $path = 'bot/message/multicast';
         $data = [
             'to' => $to,
-            'message' => $message
+            'messages' => $messages
         ];
 
         $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
