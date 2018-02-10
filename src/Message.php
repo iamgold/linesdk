@@ -13,6 +13,11 @@ use GuzzleHttp\Client as GClient;
 class Message {
 
     /**
+     * @var string ENDPOINT
+     */
+    const ENDPOINT = 'https://api.line.me/v2/';
+
+    /**
      * @var string id means an Id of Channel
      */
     private $id;
@@ -23,17 +28,25 @@ class Message {
     private $secret;
 
     /**
+     * @var array $accessToken
+     */
+    private $accessToken;
+
+    /**
      * construct
      *
      * @param string $id
      * @param string $secret
+     * @param string $accessToken means a long live token
      */
-    public function __construct($id, $secret)
+    public function __construct($id, $secret, $accessToken = false)
     {
         $id = (string) $id;
         $id = trim($id);
         $secret = (string) $secret;
         $secret = trim($secret);
+        $accessToken = (string) $accessToken;
+        $accessToken = trim($accessToken);
 
         if (empty($id))
             throw new Exception("Undefined id of channel", 404);
@@ -43,6 +56,7 @@ class Message {
 
         $this->id = $id;
         $this->secret = $secret;
+        $this->accessToken = $accessToken;
     }
 
     /**
@@ -74,5 +88,207 @@ class Message {
         }
 
         return $events;
+    }
+
+    /**
+     * Reply message
+     *
+     * @param string $replyToken
+     * @param array $message
+     * @return true|array return error message when request fail.
+     */
+    public function reply($replyToken, $message)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = 'bot/message/reply';
+        $data = [
+            'message' => $message
+        ];
+        $response = $this->sendReqeust($method, $headers, $path, $message, 'json');
+        if ($response->getStatusCode()==200)
+            return true;
+
+        $reason = json_decode($response->getReasonPhrase(), true);
+        return $reason;
+    }
+
+    /**
+     * push message
+     *
+     * @param string $to
+     * @param array $message
+     * @return true|array return error message when request fail.
+     */
+    public function push($to, $message)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = 'bot/message/push';
+        $data = [
+            'to' => $to,
+            'message' => $message
+        ];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return true;
+
+        $reason = json_decode($response->getReasonPhrase(), true);
+        return $reason;
+    }
+
+    /**
+     * multicast message
+     *
+     * @param array $to
+     * @param array $message
+     * @return true|array return error message when request fail.
+     */
+    public function multicast($to, $message)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = 'bot/message/multicast';
+        $data = [
+            'to' => $to,
+            'message' => $message
+        ];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return true;
+
+        $reason = json_decode($response->getReasonPhrase(), true);
+        return $reason;
+    }
+
+    /**
+     * get content
+     *
+     * @param string $messageId
+     * @return string
+     */
+    public function getContent($messageId)
+    {
+        $method = 'GET';
+        $path = 'bot/message/' . $messageId . '/content';
+        $headers = $this->getAuthHeader();
+        $data = [];
+        $response = $this->sendReqeust($method, $headers, $path, $data);
+        if ($response->getStatusCode()!=200)
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+
+        return $response->getBody();
+    }
+
+    /**
+     * oauth return false when request fail
+     *
+     * @param array $result a reference value
+     * @return false|array
+     */
+    public function oauth(&$result)
+    {
+        $path = 'oauth/accessToken';
+        $headers = [
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ];
+        $data = [
+                'grant_type' => 'client_credentials',
+                'client_id' => $this->id,
+                'client_secret' => $this->secret
+            ];
+        $response = $this->sendReqeust('POST', $headers, $path, $data, 'post');
+
+        if ($response->getStatusCode()!=200)
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+
+        $body = $response->getBody();
+        $result = json_decode($body, true);
+        return true;
+    }
+
+
+    /**
+     * send request
+     *
+     * @param string $method
+     * @param array $headers
+     * @param string $path
+     * @param array $data
+     * @param string $type
+     */
+    private function sendReqeust($method, $headers, $path, $data, $type)
+    {
+        $postData = [];
+        if ($type=='json') {
+            $postData = [
+                    'json' => json_encode($data)
+                ];
+        }
+
+        if ($type=='file') {
+            $postData = [
+                    'body' => fopen($data['filepath'], 'r')
+                ];
+        }
+
+        if ($type=='post') {
+            $postData = [
+                    'form_params' => $data
+                ];
+        }
+
+        $client = new GClient([
+                'base_uri' => static::ENDPOINT
+            ]);
+        $response = $client->request($method, $path, $postData);
+        return $response;
+    }
+
+    /**
+     * check has access token
+     *
+     * @return bool
+     */
+    private function hasAccessToken()
+    {
+        return ($this->accessToken!==false);
+    }
+
+    /**
+     * get access token
+     *
+     * @return string
+     */
+    private function getAccessToken()
+    {
+        try {
+            if ($this->hasAccessToken())
+                return $this->accessToken;
+
+            if ($this->oauth($res)) {
+                $this->accessToken = $res['access_token'];
+            }
+
+            return $this->accessToken;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * get authentication header
+     *
+     * @return array
+     */
+    private function getAuthHeader()
+    {
+        $accessToken = $this->getAccessToken();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken
+        ];
+        return $headers;
     }
 }
