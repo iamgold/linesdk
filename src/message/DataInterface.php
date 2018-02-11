@@ -2,7 +2,7 @@
 
 namespace iamgold\linesdk\message;
 
-interface MessageInterface
+interface DataInterface
 {
     /**
      * get response data

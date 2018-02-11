@@ -35,19 +35,18 @@ class Collector
     /**
      * add message
      *
-     * @param array
+     * @param iamgold\linesdk\message\DataInterface $message
      */
-    public function add(MessageInterface $message)
+    public function add(DataInterface $message)
     {
-
         $this->data[] = $message->getData();
     }
 
     /**
      * add multiple messages
-     * format: [MessageInterface1, MessageInterface2]
+     * format: [iamgold\linesdk\message\DataInterface1, iamgold\linesdk\message\DataInterface2]
      *
-     * @param array $messages
+     * @param array $messages means array of iamgold\linesdk\message\DataInterface
      */
     public function addMultiple($messages)
     {

@@ -8,13 +8,8 @@ namespace iamgold\linesdk\message;
  * @author Eric Huang <iamgold0105@gmail.com>
  * @version 1.0.0
  */
-class Location extends BaseMessage
+class Location extends TypeObject
 {
-    /**
-     * @var string TYPE
-     */
-    const TYPE = 'location';
-
     /**
      * construct
      *

@@ -8,7 +8,7 @@ namespace iamgold\linesdk\message;
  * @author Eric Huang <iamgold0105@gmail.com>
  * @version 1.0.0
  */
-class Sticker extends BaseMessage
+class Sticker extends TypeObject
 {
     /**
      * construct

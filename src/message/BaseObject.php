@@ -3,12 +3,13 @@
 namespace iamgold\linesdk\message;
 
 /**
- * This is a base message, all messages are must extending this.
+ * This is a base object. It provides set and get method
+ * using implementing magic method.
  *
  * @author Eric Huang <iamgold0105@gmail.com>
  * @version 1.0.0
  */
-class BaseMessage implements MessageInterface
+class BaseObject implements DataInterface
 {
     /**
      * @var array $data
@@ -22,9 +23,7 @@ class BaseMessage implements MessageInterface
      */
     public function getData()
     {
-        $data = $this->data;
-        $data['type'] = $this->getType();
-        return $data;
+        return $this->data;
     }
 
     /**
