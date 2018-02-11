@@ -1,6 +1,6 @@
 <?php
 
-namespace iamgold\linesdk\message;
+namespace iamgold\linesdk\webhooks;
 
 /**
  * This is a message event of image.

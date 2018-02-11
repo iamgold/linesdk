@@ -1,6 +1,6 @@
 <?php
 
-namespace iamgold\linesdk\message;
+namespace iamgold\linesdk\webhooks;
 
 /**
  * This is a message event of video.
@@ -8,30 +8,30 @@ namespace iamgold\linesdk\message;
  * @author Eric Huang <iamgold0105@gmail.com>
  * @version 1.0.0
  */
-class MessageStickerEvent extends Event
+class MessageFileEvent extends Event
 {
     // use message event trait
     use MessageEventTrait;
 
     /**
-     * get package id of sticker
+     * get filename
      *
      * @return string
      */
-    public function getPackageId()
+    public function getFileName()
     {
         $message = $this->getMessage();
-        return $message['packageId'];
+        return $message['fileName'];
     }
 
     /**
-     * get id of sticker
+     * get file size
      *
      * @return string
      */
-    public function getStickerId()
+    public function getFileSize()
     {
         $message = $this->getMessage();
-        return $message['stickerId'];
+        return $message['fileSize'];
     }
 }

@@ -3,6 +3,7 @@
 namespace iamgold\linesdk;
 
 use GuzzleHttp\Client as GClient;
+use iamgold\linesdk\message\Collector;
 
 /**
  * This class is used to handle all APIs include create valide webhook, push and reply message
@@ -88,6 +89,16 @@ class Message {
         }
 
         return $events;
+    }
+
+    /**
+     * create message collector
+     *
+     * @return iamgold\linesdk\Collector
+     */
+    public function createCollector()
+    {
+        return new Collector($this);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace iamgold\linesdk\message;
+namespace iamgold\linesdk\webhooks;
 
 /**
  * This is an unfollow event class.

@@ -34,9 +34,9 @@ class MessageEventFactory
 
         if ($type==='message') {
             $messageType = $data['message']['type'];
-            $className = sprintf('iamgold\linesdk\message\%s%sEvent', ucfirst($type), ucfirst($messageType));
+            $className = sprintf('iamgold\linesdk\webhooks\%s%sEvent', ucfirst($type), ucfirst($messageType));
         } else {
-            $className = sprintf('iamgold\linesdk\message\%sEvent', ucfirst($type));
+            $className = sprintf('iamgold\linesdk\webhooks\%sEvent', ucfirst($type));
         }
 
         return new $className($data);

@@ -1,6 +1,6 @@
 <?php
 
-namespace iamgold\linesdk\message;
+namespace iamgold\linesdk\webhooks;
 
 /**
  * This trait defines many methods to access message
