@@ -10,6 +10,9 @@ namespace iamgold\linesdk\webhooks;
  */
 class PostbackEvent extends Event
 {
+    // use message event trait
+    use MessageEventTrait;
+
     /**
      * get postback
      *

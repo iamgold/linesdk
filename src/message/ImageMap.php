@@ -42,7 +42,6 @@ class ImageMap extends TypeObject
     {
         $data = [];
         while($act=array_shift($actions)) {
-            var_dump($act);
             if ($act instanceof DataInterface) {
                 $data[] = $act->getData();
             } else {
