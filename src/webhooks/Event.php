@@ -106,7 +106,7 @@ class Event
     public function getSourceRoomId()
     {
         $roomId = null;
-        if ($this->isGroupEvent()) {
+        if ($this->isRoomEvent()) {
             $source = $this->getSource();
             $roomId = $source['roomId'];
         }
