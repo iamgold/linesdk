@@ -121,8 +121,7 @@ class Event
      */
     public function isGroupEvent()
     {
-        $source = $this->getSource();
-        return (isset($source['groupId']));
+        return ($this->getSourceType()=='group');
     }
 
     /**
@@ -132,7 +131,6 @@ class Event
      */
     public function isRoomEvent()
     {
-        $source = $this->getSource();
-        return (isset($source['roomId']));
+        return ($this->getSourceType()=='room');
     }
 }
