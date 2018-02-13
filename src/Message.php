@@ -277,6 +277,145 @@ class Message {
     }
 
     /**
+     * get rich menu list
+     *
+     * @return array
+     */
+    public function getRichMenus()
+    {
+        $method = 'GET';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = 'bot/richmenu/list';
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * get specific rich menu
+     *
+     * @param string $richMenuId
+     * @return array
+     */
+    public function getRichMenuById($richMenuId)
+    {
+        $method = 'GET';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/richmenu/%s', $richMenuId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * create a rich menu
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function createRichMenu(array $data)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = 'bot/richmenu';
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * delete a rich menu
+     *
+     * @param string $richMenuId
+     * @return bool
+     */
+    public function deleteRichMenu($richMenuId)
+    {
+        $method = 'delete';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/richmenu/%s', $richMenuId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * upload an image to rich menu
+     *
+     * @param string $richMenuId
+     * @param string $filePath
+     * @return bool
+     */
+    public function uploadRichMenuImage($richMenuId, $filePath)
+    {
+        $method = 'post';
+        $contentType = mime_content_type($filePath);
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>$contentType]);
+        $path = sprintf('bot/richmenu/%s/content', $richMenuId);
+        $data = fopen($filePath, 'r');
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'file');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * Link a richmenu to specific user
+     *
+     * @param string $richMenuId
+     * @param string $userId
+     */
+    public function linkRichMenuToUser($richMenuId, $userId)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/user/%s/richmenu/%s', $userId, $richMenuId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * unlink a richmenu to specific user
+     *
+     * @param string $userId
+     */
+    public function unlinkRichMenuFromUser($userId)
+    {
+        $method = 'delete';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/user/%s/richmenu', $userId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
      * oauth return false when request fail
      *
      * @param array $result a reference value
@@ -352,7 +491,7 @@ class Message {
      * @param string $method
      * @param array $headers
      * @param string $path
-     * @param array $data
+     * @param mixed $data
      * @param string $type
      */
     private function sendReqeust($method, $headers, $path, $data, $type)
@@ -366,7 +505,7 @@ class Message {
 
         if ($type=='file') {
             $postData = [
-                    'body' => fopen($data['filepath'], 'r')
+                    'body' => $data
                 ];
         }
 
@@ -381,6 +520,7 @@ class Message {
         $client = new GClient([
                 'base_uri' => static::ENDPOINT
             ]);
+
         $response = $client->request($method, $path, $postData);
         return $response;
     }
