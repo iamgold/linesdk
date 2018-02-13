@@ -195,6 +195,88 @@ class Message {
     }
 
     /**
+     * get room member profile
+     *
+     * @param string $roomId
+     * @param string $userId
+     * @return array
+     */
+    public function getRoomUserProfile($roomId, $userId)
+    {
+        try {
+            return $this->queryUserProfileByType('room', $roomId, $userId);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * get room members, this feature onlyl Approved accounts or official accounts
+     *
+     * @param string $roomId
+     * @return array
+     */
+    public function getRoomUsers($roomId)
+    {
+        $method = 'GET';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/room/%s/members/ids', $roomId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * leave a room by specific room id
+     *
+     * @param string $roomId
+     * @return array
+     */
+    public function leaveRoomById($roomId)
+    {
+        try {
+            return $this->leaveByType('room', $roomId);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * get group member profile
+     *
+     * @param string $groupId
+     * @param string $userId
+     * @return array
+     */
+    public function getGroupUserProfile($groupId, $userId)
+    {
+        try {
+            return $this->queryUserProfileByType('group', $groupId, $userId);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * leave a group by specific group id
+     *
+     * @param string $groupId
+     * @return array
+     */
+    public function leaveGroupById($groupId)
+    {
+        try {
+            return $this->leaveByType('group', $groupId);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
      * oauth return false when request fail
      *
      * @param array $result a reference value
@@ -221,6 +303,48 @@ class Message {
         return true;
     }
 
+    /**
+     * get user profile specific room or group
+     *
+     * @param string $type
+     * @param string $id means room or group
+     * @param string $userId
+     * @return array
+     */
+    protected function queryUserProfileByType($type, $id, $userId)
+    {
+        $method = 'GET';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/%s/%s/member/%s', $type, $id, $userId);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    /**
+     * leave by specific room or group
+     *
+     * @param string $type
+     * @param string $id means room or group
+     * @return array
+     */
+    protected function leaveByType($type, $id)
+    {
+        $method = 'POST';
+        $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
+        $path = sprintf('bot/%s/%s/leave', $type, $id);
+        $data = [];
+
+        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        if ($response->getStatusCode()==200)
+            return json_decode($response->getBody(), true);
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
 
     /**
      * send request
