@@ -19,9 +19,9 @@ class MessageEventFactory
 
     /**
      * create an event by specific data
-     *
      * @param array $data
-     * @return iamgold\linesdk\Event
+     * @return \iamgold\linesdk\webhooks\Event
+     * @throws Exception
      */
     public static function create(array $data)
     {

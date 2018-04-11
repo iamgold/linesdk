@@ -2,6 +2,7 @@
 
 namespace iamgold\linesdk;
 
+use Exception;
 use GuzzleHttp\Client as GClient;
 use iamgold\linesdk\message\Collector;
 
@@ -34,11 +35,12 @@ class Message {
     private $accessToken;
 
     /**
-     * construct
+     * Message constructor.
      *
-     * @param string $id
-     * @param string $secret
-     * @param string $accessToken means a long live token
+     * @param $id
+     * @param $secret
+     * @param bool $accessToken
+     * @throws Exception
      */
     public function __construct($id, $secret, $accessToken = false)
     {
@@ -75,10 +77,10 @@ class Message {
     }
 
     /**
-     * parse events of specific requestbody
+     * parse events of specific request body
      *
-     * @param string $resquestBody
-     * @return iamgold\message\Events[]
+     * @param $requestBody
+     * @return array \iamgold\linesdk\webhooks\Event[]
      */
     public function parseEvents($requestBody)
     {
@@ -94,7 +96,7 @@ class Message {
     /**
      * create message collector
      *
-     * @return iamgold\linesdk\Collector
+     * @return Collector
      */
     public function createCollector()
     {
@@ -129,7 +131,7 @@ class Message {
      * push message
      *
      * @param string $to
-     * @param array $message
+     * @param array $messages
      * @return true|array return error message when request fail.
      */
     public function push($to, $messages)
@@ -154,7 +156,7 @@ class Message {
      * multicast message
      *
      * @param array $to
-     * @param array $message
+     * @param array $messages
      * @return true|array return error message when request fail.
      */
     public function multicast($to, $messages)
@@ -178,8 +180,9 @@ class Message {
     /**
      * get content
      *
-     * @param string $messageId
-     * @return string
+     * @param $messageId
+     * @return \Psr\Http\Message\StreamInterface
+     * @throws Exception
      */
     public function getContent($messageId)
     {
@@ -197,9 +200,10 @@ class Message {
     /**
      * get room member profile
      *
-     * @param string $roomId
-     * @param string $userId
+     * @param $roomId
+     * @param $userId
      * @return array
+     * @throws Exception
      */
     public function getRoomUserProfile($roomId, $userId)
     {
@@ -211,10 +215,11 @@ class Message {
     }
 
     /**
-     * get room members, this feature onlyl Approved accounts or official accounts
+     * get room members, this feature only Approved accounts or official accounts
      *
-     * @param string $roomId
-     * @return array
+     * @param $roomId
+     * @return mixed
+     * @throws Exception
      */
     public function getRoomUsers($roomId)
     {
@@ -233,8 +238,9 @@ class Message {
     /**
      * leave a room by specific room id
      *
-     * @param string $roomId
+     * @param $roomId
      * @return array
+     * @throws Exception
      */
     public function leaveRoomById($roomId)
     {
@@ -248,9 +254,10 @@ class Message {
     /**
      * get group member profile
      *
-     * @param string $groupId
-     * @param string $userId
+     * @param $groupId
+     * @param $userId
      * @return array
+     * @throws Exception
      */
     public function getGroupUserProfile($groupId, $userId)
     {
@@ -266,6 +273,7 @@ class Message {
      *
      * @param string $groupId
      * @return array
+     * @throws Exception
      */
     public function leaveGroupById($groupId)
     {
@@ -280,6 +288,7 @@ class Message {
      * get rich menu list
      *
      * @return array
+     * @throws Exception
      */
     public function getRichMenus()
     {
@@ -300,6 +309,7 @@ class Message {
      *
      * @param string $richMenuId
      * @return array
+     * @throws Exception
      */
     public function getRichMenuById($richMenuId)
     {
@@ -319,7 +329,8 @@ class Message {
      * create a rich menu
      *
      * @param array $data
-     * @return bool
+     * @return array
+     * @throws Exception
      */
     public function createRichMenu(array $data)
     {
@@ -338,7 +349,8 @@ class Message {
      * delete a rich menu
      *
      * @param string $richMenuId
-     * @return bool
+     * @return array
+     * @throws Exception
      */
     public function deleteRichMenu($richMenuId)
     {
@@ -359,7 +371,8 @@ class Message {
      *
      * @param string $richMenuId
      * @param string $filePath
-     * @return bool
+     * @return array
+     * @throws Exception
      */
     public function uploadRichMenuImage($richMenuId, $filePath)
     {
@@ -381,6 +394,8 @@ class Message {
      *
      * @param string $richMenuId
      * @param string $userId
+     * @return array
+     * @throws Exception
      */
     public function linkRichMenuToUser($richMenuId, $userId)
     {
@@ -400,6 +415,8 @@ class Message {
      * unlink a richmenu to specific user
      *
      * @param string $userId
+     * @return array
+     * @throws Exception
      */
     public function unlinkRichMenuFromUser($userId)
     {
@@ -420,6 +437,7 @@ class Message {
      *
      * @param array $result a reference value
      * @return false|array
+     * @throws Exception
      */
     public function oauth(&$result)
     {
@@ -449,6 +467,7 @@ class Message {
      * @param string $id means room or group
      * @param string $userId
      * @return array
+     * @throws Exception
      */
     protected function queryUserProfileByType($type, $id, $userId)
     {
@@ -470,6 +489,7 @@ class Message {
      * @param string $type
      * @param string $id means room or group
      * @return array
+     * @throws Exception
      */
     protected function leaveByType($type, $id)
     {
@@ -493,6 +513,7 @@ class Message {
      * @param string $path
      * @param mixed $data
      * @param string $type
+     * @return mixed|\Psr\Http\Message\ResponseInterface
      */
     private function sendReqeust($method, $headers, $path, $data, $type)
     {
@@ -539,6 +560,7 @@ class Message {
      * get access token
      *
      * @return string
+     * @throws Exception
      */
     private function getAccessToken()
     {

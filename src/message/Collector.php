@@ -18,7 +18,7 @@ class Collector
     private $data = [];
 
     /**
-     * @var iamgold\linesdk\Message $message
+     * @var \iamgold\linesdk\Message $message
      */
     private $message;
 
@@ -35,7 +35,7 @@ class Collector
     /**
      * add message
      *
-     * @param iamgold\linesdk\message\DataInterface $message
+     * @param \iamgold\linesdk\message\DataInterface $message
      */
     public function add(DataInterface $message)
     {
