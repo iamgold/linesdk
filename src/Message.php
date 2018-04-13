@@ -198,6 +198,26 @@ class Message {
     }
 
     /**
+     * get profile
+     *
+     * @param $userId
+     * @return \Psr\Http\Message\StreamInterface
+     * @throws Exception
+     */
+    public function getProfile($userId)
+    {
+        $method = 'GET';
+        $path = 'bot/profile/' . $userId;
+        $headers = $this->getAuthHeader();
+        $data = [];
+        $response = $this->sendRequest($method, $headers, $path, $data);
+        if ($response->getStatusCode()!=200)
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+
+        return $response->getBody();
+    }
+
+    /**
      * get room member profile
      *
      * @param $roomId
@@ -515,7 +535,7 @@ class Message {
      * @param string $type
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    private function sendRequest($method, $headers, $path, $data, $type)
+    private function sendRequest($method, $headers, $path, $data, $type = 'json')
     {
         $postData = [];
         if ($type=='json') {
