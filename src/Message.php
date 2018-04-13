@@ -119,7 +119,7 @@ class Message {
             'replyToken' => $replyToken,
             'messages' => $messages
         ];
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return true;
 
@@ -144,7 +144,7 @@ class Message {
             'messages' => $messages
         ];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return true;
 
@@ -169,7 +169,7 @@ class Message {
             'messages' => $messages
         ];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return true;
 
@@ -190,7 +190,7 @@ class Message {
         $path = 'bot/message/' . $messageId . '/content';
         $headers = $this->getAuthHeader();
         $data = [];
-        $response = $this->sendReqeust($method, $headers, $path, $data);
+        $response = $this->sendRequest($method, $headers, $path, $data);
         if ($response->getStatusCode()!=200)
             throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 
@@ -228,7 +228,7 @@ class Message {
         $path = sprintf('bot/room/%s/members/ids', $roomId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -297,7 +297,7 @@ class Message {
         $path = 'bot/richmenu/list';
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -318,7 +318,7 @@ class Message {
         $path = sprintf('bot/richmenu/%s', $richMenuId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -338,7 +338,7 @@ class Message {
         $headers = array_merge($this->getAuthHeader(), ['Content-Type'=>'application/json']);
         $path = 'bot/richmenu';
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -359,7 +359,7 @@ class Message {
         $path = sprintf('bot/richmenu/%s', $richMenuId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -382,7 +382,7 @@ class Message {
         $path = sprintf('bot/richmenu/%s/content', $richMenuId);
         $data = fopen($filePath, 'r');
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'file');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'file');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -404,7 +404,7 @@ class Message {
         $path = sprintf('bot/user/%s/richmenu/%s', $userId, $richMenuId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -425,7 +425,7 @@ class Message {
         $path = sprintf('bot/user/%s/richmenu', $userId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -450,7 +450,7 @@ class Message {
                 'client_id' => $this->id,
                 'client_secret' => $this->secret
             ];
-        $response = $this->sendReqeust('POST', $headers, $path, $data, 'post');
+        $response = $this->sendRequest('POST', $headers, $path, $data, 'post');
 
         if ($response->getStatusCode()!=200)
             throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
@@ -476,7 +476,7 @@ class Message {
         $path = sprintf('bot/%s/%s/member/%s', $type, $id, $userId);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -498,7 +498,7 @@ class Message {
         $path = sprintf('bot/%s/%s/leave', $type, $id);
         $data = [];
 
-        $response = $this->sendReqeust($method, $headers, $path, $data, 'json');
+        $response = $this->sendRequest($method, $headers, $path, $data, 'json');
         if ($response->getStatusCode()==200)
             return json_decode($response->getBody(), true);
 
@@ -515,7 +515,7 @@ class Message {
      * @param string $type
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
-    private function sendReqeust($method, $headers, $path, $data, $type)
+    private function sendRequest($method, $headers, $path, $data, $type)
     {
         $postData = [];
         if ($type=='json') {
