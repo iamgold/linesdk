@@ -26,6 +26,16 @@ class Event
     }
 
     /**
+     * get data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * get type
      *
      * @return string
